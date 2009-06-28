@@ -1,6 +1,6 @@
 #!perl -w
 
-use Test::More tests => 4;
+use Test::More tests => 7;
 use File::Basename;
 use Cwd 'abs_path';
 
@@ -45,17 +45,56 @@ SKIP: {
     ok(-f dirname(__FILE__) . '/data/output_imagemagick.png', 'Output file should exist');
     
     SKIP: {
-        $result = _compare(dirname(__FILE__) . '/data/output_imagemagick.png');
+        $result = _compare(5, dirname(__FILE__) . '/data/output_imagemagick.png');
         is($result, "0\n", 'Output image should resemble the image we expect');
+        
+        my $a_test = new Tempest(
+            'input_file' => dirname(__FILE__) . '/data/screenshot.png',
+            'output_file' => dirname(__FILE__) . '/data/opacity_imagemagick_a.png',
+            'image_lib' => Tempest::LIB_MAGICK,
+            'coordinates' => [
+                [100,100],
+                [200,200], [200,200],
+                [300,300], [300,300], [300,300],
+            ],
+        );
+        $a_test->render();
+        ok(-f dirname(__FILE__) . '/data/opacity_imagemagick_a.png', 'Output file for "a" test should exist');
+        
+        my $b_test = new Tempest(
+            'input_file' => dirname(__FILE__) . '/data/screenshot.png',
+            'output_file' => dirname(__FILE__) . '/data/opacity_imagemagick_b.png',
+            'image_lib' => Tempest::LIB_MAGICK,
+            'coordinates' => [
+                [100,100], [100,100],
+                [200,200], [200,200], [200,200],
+                [300,300], [300,300], [300,300], [300,300],
+            ],
+        );
+        $b_test->render();
+        ok(-f dirname(__FILE__) . '/data/opacity_imagemagick_b.png', 'Output file for "b" test should exist');
+        
+        $result = _compare(
+            20,
+            dirname(__FILE__) . '/data/opacity_imagemagick_a.png',
+            dirname(__FILE__) . '/data/opacity_imagemagick_b.png',
+        );
+        is($result, "0\n", 'Output images should be mostly identical');
     }
 }
 
 sub _compare {
+    my $fuzz = shift;
     my $compare = shift;
+    my $baseline = shift;
+    
+    if(!$baseline) {
+        $baseline = dirname(__FILE__) . '/data/compare.png';
+    }
     
     my $output = `compare -version 2>&1`;
     if(!defined($output) || $output !~ m/Version\:\s*ImageMagick/) {
-        skip 'ImageMagick compare utility not available', 1;
+        skip 'ImageMagick compare utility not available', 4;
         return;
     }
     
@@ -66,10 +105,10 @@ sub _compare {
         close($TOUCH);
     }
     
-    $output = 'compare -metric ae -fuzz 5% '
+    $output = 'compare -metric ae -fuzz ' . $fuzz . '% '
         . abs_path($compare)
         . ' '
-        . abs_path(dirname(__FILE__) . '/data/compare.png')
+        . abs_path($baseline)
         . ' '
         . abs_path(dirname(__FILE__) . '/data/diff.png')
         . ' 2>&1';

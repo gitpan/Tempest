@@ -1,4 +1,11 @@
 Revision history for Tempest
 
+2009.06.28
+        Completely rewrote colorization to be simpler & produce more precise
+        results. In the process, fixed opacity issues where the opacity was
+        unintentionally inverted.
+        
+        Also expanded on lib-specific tests to include opacity comparisons.
+
 2009.06.25
         First release packaged as a CPAN module.

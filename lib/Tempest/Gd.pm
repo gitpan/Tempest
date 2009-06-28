@@ -45,20 +45,23 @@ sub render {
     
     # load plot image (presumably greyscale)
     my $plot_file = GD::Image->new($parent->get_plot_file());
+    
     # calculate coord correction based on plot image size
     my @plot_correct = ( ($plot_file->width / 2), ($plot_file->height / 2) );
     
-    # paste as many plots for each coordinate pair as their repitition indicates
+    # colorize opacity for how many times at most a point will be repeated
+    colorize($plot_file, (99 / $max_rep) );
+    
+    # paste one plot for each coordinate pair
     for my $pair (@{$coordinates}) {
-        # apply colorization by how many times coord pair was repeated
-        my $point_file = $plot_file->clone();
-        composite(
-            $output_file,
-            $point_file,
-            (((99 * $pair->[2]) / $max_rep) / 100),
-            ($pair->[0] - $plot_correct[0]),
-            ($pair->[1] - $plot_correct[1])
-        );
+        my $x = ($pair->[0] - $plot_correct[0]);
+        my $y = ($pair->[1] - $plot_correct[1]);
+        
+        # for how many times coord pair was repeated
+        for (1..$pair->[2]) {
+            # paste plot, centered on given coords
+            composite($output_file, $plot_file, $x, $y);
+        }
     }
     
     # destroy plot file, as we don't need it anymore
@@ -128,7 +131,7 @@ sub write_image {
 }
 
 sub composite {
-    my($source_image, $composite_image, $opacity, $x, $y) = @_;
+    my($source_image, $composite_image, $x, $y) = @_;
     
     # set aside space to cache colors
     my %cached_colors;
@@ -147,9 +150,6 @@ sub composite {
             # get colors to composite together
             my @source_color = $source_image->rgb( $source_image->getPixel($source_x, $source_y) );
             my @composite_color = $composite_image->rgb( $composite_image->getPixel($x_offset, $y_offset) );
-            
-            # colorize source_color to given opacity
-            colorize($opacity, \@composite_color);
             
             # multiply colors together, caching them within the same composite call
             my $cache_key = join(',', @source_color) . 'x' . join(',', @composite_color);
@@ -171,11 +171,42 @@ sub composite {
 }
 
 sub colorize {
+    my $image_file = shift;
     my $opacity = shift;
-    my $color = shift;
     
-    for my $i (0..2) {
-        $color->[$i] = $color->[$i] + ((255 - $color->[$i]) * $opacity);
+    # set aside space to cache colors
+    my %cached_colors;
+    
+    # reduce percentage to fraction
+    $opacity = (100 - $opacity) / 100;
+    
+    # get dimensions once
+    my $image_width = ($image_file->width - 1);
+    my $image_height = ($image_file->height - 1);
+    
+    # iterate through each pixel in given image
+    for my $x (0..$image_width) {
+        for my $y (0..$image_height) {
+            # get color to colorize
+            my @color = $image_file->rgb( $image_file->getPixel($x, $y) );
+            
+            # cache colors as we colorize them
+            my $cache_key = join(',', @color);
+            if(exists($cached_colors{$cache_key})) {
+                @color = @{ $cached_colors{$cache_key} };
+            }
+            else {
+                for my $i (0..2) {
+                    $color[$i] = $color[$i] + ((255 - $color[$i]) * $opacity);
+                }
+                $cached_colors{$cache_key} = \@color;
+            }
+            
+            # allocate and set new colors after colorization
+            my $color = $image_file->colorAllocate(@color);
+            $image_file->setPixel($x, $y, $color);
+            $image_file->colorDeallocate($color);
+        }
     }
 }
 

@@ -42,17 +42,27 @@ sub render {
     # load plot image (presumably greyscale)
     my $plot_file = Image::Magick->new;
     $plot_file->Read($parent->get_plot_file());
+    
     # calculate coord correction based on plot image size
     my @plot_correct = ( ($plot_file->Get('width') / 2), ($plot_file->Get('height') / 2) );
     
-    # paste as many plots for each coordinate pair as their repitition indicates
+    # colorize opacity for how many times at most a point will be repeated
+    $plot_file->Colorize('fill' => 'white', 'opacity' => (100 - int(99 / $max_rep)) . '%');
+    
+    # paste one plot for each coordinate pair
     for my $pair (@{$coordinates}) {
-        # apply colorization by how many times coord pair was repeated
-        my $point_file = $plot_file->Clone();
-        $point_file->Colorize('fill' => 'white', 'opacity' => int((99 * $pair->[2]) / $max_rep) . '%');
-        # multiply into output image
-        $output_file->Composite('image' => $point_file, 'compose' => 'Multiply', 'x' => ($pair->[0] - $plot_correct[0]), 'y' => ($pair->[1] - $plot_correct[1]) );
+        my $x = ($pair->[0] - $plot_correct[0]);
+        my $y = ($pair->[1] - $plot_correct[1]);
+        
+        # for how many times coord pair was repeated
+        for(1..$pair->[2]) {
+            # paste plot, centered on given coords
+            $output_file->Composite('image' => $plot_file, 'compose' => 'Multiply', 'x' => $x, 'y' => $y );
+        }
     }
+    
+    # destroy plot file, as we don't need it anymore
+    undef $plot_file;
     
     # open given spectrum
     my $color_file = Image::Magick->new;
@@ -60,6 +70,9 @@ sub render {
     
     # apply color lookup table
     $output_file->Clut('image' => $color_file);
+    
+    # destroy color file, as we don't need it anymore
+    undef $color_file;
     
     # overlay heatmap over source image
     if($parent->get_overlay()) {
