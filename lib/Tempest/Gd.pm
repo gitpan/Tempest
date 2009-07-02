@@ -1,3 +1,31 @@
+=head1 NAME
+
+Tempest::GD - GD adapter for Tempest heat-map generator
+
+=head1 DESCRIPTION
+
+Implements L<Tempest|Tempest> image operations using the L<GD|GD> module.
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009 Evan Kaufman, all rights reserved.
+
+This program is released under the MIT license.
+
+L<http://www.opensource.org/licenses/mit-license.php>
+
+=head1 ADDITIONAL LINKS
+
+=over
+
+=item LibGD:
+
+L<http://www.libgd.org/>
+
+=back
+
+=cut
+
 package Tempest::Gd;
 
 use strict;

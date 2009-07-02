@@ -1,3 +1,32 @@
+=head1 NAME
+
+Tempest::Imagemagick - PerlMagick adapter for Tempest heat-map generator
+
+=head1 DESCRIPTION
+
+Implements L<Tempest|Tempest> image operations using the
+L<Image::Magick|Image::Magick> module.
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009 Evan Kaufman, all rights reserved.
+
+This program is released under the MIT license.
+
+L<http://www.opensource.org/licenses/mit-license.php>
+
+=head1 ADDITIONAL LINKS
+
+=over
+
+=item ImageMagick:
+
+L<http://imagemagick.com/>
+
+=back
+
+=cut
+
 package Tempest::Imagemagick;
 
 use strict;
@@ -64,15 +93,19 @@ sub render {
     # destroy plot file, as we don't need it anymore
     undef $plot_file;
     
-    # open given spectrum
-    my $color_file = Image::Magick->new;
-    $color_file->Read($parent->get_color_file());
-    
-    # apply color lookup table
-    $output_file->Clut('image' => $color_file);
-    
-    # destroy color file, as we don't need it anymore
-    undef $color_file;
+    # apply color lookup table with clut method if available
+    if($output_file->can('Clut')) {
+        my $color_file = Image::Magick->new;
+        $color_file->Read($parent->get_color_file());
+        $output_file->Clut('image' => $color_file);
+    }
+    # for older IM versions (anything before 6.3.5-7), use fx operator
+    else {
+        $output_file->Read($parent->get_color_file());
+        my $fx = $output_file->Fx('expression' => 'v.p{0,u*v.h}');
+        undef $output_file;
+        $output_file = $fx;
+    }
     
     # overlay heatmap over source image
     if($parent->get_overlay()) {

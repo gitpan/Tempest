@@ -1,5 +1,10 @@
 Revision history for Tempest
 
+2009.07.02
+        In ImageMagick adapter, now checking if Clut method is supported and,
+        if it's not, use the Fx operator instead.  This should fix the failures
+        in the CPAN testers matrix.
+
 2009.06.28
         Completely rewrote colorization to be simpler & produce more precise
         results. In the process, fixed opacity issues where the opacity was

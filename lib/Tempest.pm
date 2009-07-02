@@ -25,13 +25,13 @@ modern CPAN module:
 
 =head1 VERSION
 
-Version 2009.06.28_1 (alpha release)
+Version 2009.07.02_1 (alpha release)
 
 Tempest API Version 2009.06.16
 
 =cut
 
-our $VERSION = qv('2009.06.28_1'); # using CPAN alpha versioning to denote non-stable release
+our $VERSION = qv('2009.07.02_1'); # using CPAN alpha versioning to denote non-stable release
 our $API_VERSION = qv('2009.06.16');
 
 =head1 SYNOPSIS
@@ -55,7 +55,7 @@ This module exposes the Tempest API through class instantiation:
 
 =head1 CONSTANTS
 
-These constants can be assigned to the L<image_lib|image_lib> property to specify use
+These constants can be assigned to the C<image_lib> property to specify use
 of a given image library for all image manipulations.
 
 =head3 C<LIB_MAGICK>
@@ -261,7 +261,7 @@ sub api_version {
 Each setter method assigns a new value to its respective property.
 The setters also return the current class instance, so they can be 'chained'.
 
-For example, if we wanted to change the L<image_lib|image_lib> used for image processing,
+For example, if we wanted to change the C<image_lib> used for image processing,
 and immediately render the resulting heatmap:
 
     # render heatmap with Image::Magick support
@@ -271,7 +271,7 @@ and immediately render the resulting heatmap:
 
 Each getter method returns the current value of its respective property.
 
-For example, if we wanted to retrieve the L<coordinates|coordinates> to be rendered and
+For example, if we wanted to retrieve the C<coordinates> to be rendered and
 immediately output them with the L<Data::Dumper|Data::Dumper> module:
 
     use Data::Dumper;
