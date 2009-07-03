@@ -1,5 +1,10 @@
 Revision history for Tempest
 
+2009.07.03
+        Fixed dubious dependancy tests (for GD and Image::Magick) bundled with
+        the distribution.  *Now* this should fix the failures in the CPAN
+        testers matrix.
+
 2009.07.02
         In ImageMagick adapter, now checking if Clut method is supported and,
         if it's not, use the Fx operator instead.  This should fix the failures

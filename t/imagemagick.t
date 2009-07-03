@@ -11,7 +11,7 @@ BEGIN {
 SKIP: {
     # skip entire test file if Image::Magick module is not available
     eval { require Image::Magick };
-    skip "Image::Magick module not installed", 3 if $@;
+    skip "Image::Magick module not installed", 6 if $@;
     
     # remove output file if it exists
     if(-f dirname(__FILE__) . '/data/output_imagemagick.png') {
@@ -46,6 +46,7 @@ SKIP: {
     
     SKIP: {
         $result = _compare(5, dirname(__FILE__) . '/data/output_imagemagick.png');
+        skip 'Compare utility not available', 4 if ! defined $result;
         is($result, "0\n", 'Output image should resemble the image we expect');
         
         my $a_test = new Tempest(
@@ -79,6 +80,7 @@ SKIP: {
             dirname(__FILE__) . '/data/opacity_imagemagick_a.png',
             dirname(__FILE__) . '/data/opacity_imagemagick_b.png',
         );
+        skip 'Compare utility not available', 1 if ! defined $result;
         is($result, "0\n", 'Output images should be mostly identical');
     }
 }
@@ -94,7 +96,6 @@ sub _compare {
     
     my $output = `compare -version 2>&1`;
     if(!defined($output) || $output !~ m/Version\:\s*ImageMagick/) {
-        skip 'ImageMagick compare utility not available', 4;
         return;
     }
     
