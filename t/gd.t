@@ -12,6 +12,7 @@ SKIP: {
     # skip entire test file if GD module is not available
     eval { require GD };
     skip "GD module not installed", 6 if $@;
+    diag("Testing GD $GD::VERSION");
     
     # remove output file if it exists
     if(-f dirname(__FILE__) . '/data/output_gd.png') {

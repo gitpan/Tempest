@@ -11,6 +11,14 @@ ok( defined(&Tempest::new), 'constructor' );
 
 ok( defined(&Tempest::render), 'render method' );
 
+## check static methods
+
+ok( defined(&Tempest::version), 'version static method' );
+
+ok( defined(&Tempest::api_version), 'api version static method' );
+
+ok( defined(&Tempest::has_image_lib), 'supported libraries static method' );
+
 ## check getters and setters for instance properties
 @props = (
     'input_file',

@@ -9,6 +9,7 @@ lib/Tempest/data/clut.png
 lib/Tempest/data/plot.png
 t/00-load.t
 t/01-api.t
+t/02-instantiation.t
 t/imagemagick.t
 t/gd.t
 t/pod.t

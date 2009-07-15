@@ -12,6 +12,7 @@ SKIP: {
     # skip entire test file if Image::Magick module is not available
     eval { require Image::Magick };
     skip "Image::Magick module not installed", 6 if $@;
+    diag("Testing Image::Magick $Image::Magick::VERSION");
     
     # remove output file if it exists
     if(-f dirname(__FILE__) . '/data/output_imagemagick.png') {

@@ -25,14 +25,14 @@ modern CPAN module:
 
 =head1 VERSION
 
-Version 2009.07.03_1 (alpha release)
+Version 2009.07.15_1 (alpha release)
 
-Tempest API Version 2009.06.16
+Tempest API Version 2009.07.15
 
 =cut
 
-our $VERSION = qv('2009.07.03_1'); # using CPAN alpha versioning to denote non-stable release
-our $API_VERSION = qv('2009.06.16');
+our $VERSION = qv('2009.07.15_1'); # using CPAN alpha versioning to denote non-stable release
+our $API_VERSION = qv('2009.07.15');
 
 =head1 SYNOPSIS
 
@@ -422,17 +422,11 @@ sub set_image_lib {
     my $self = shift;
     my $image_lib = shift;
     
-    if($image_lib eq LIB_MAGICK || $image_lib eq LIB_GD) {
-        eval("no warnings 'all'; require $image_lib;");
-        if(!$@) {
-            $image_lib{$self} = $image_lib;
-        }
-        else {
-            croak("Image library '$image_lib' could not be found");
-        }
+    if($self->has_image_lib($image_lib)) {
+        $image_lib{$self} = $image_lib;
     }
     else {
-        croak("Image library '$image_lib' is not supported");
+        croak("Image library '$image_lib' could not be found");
     }
     
     return $self;
@@ -443,14 +437,43 @@ sub get_image_lib {
     return $image_lib{$self};
 }
 
+=head2 C<has_image_lib>
+
+Returns true value if the given image library is available.
+
+    die('GD is unavailable') if ! $heatmap->has_image_lib(Tempest::LIB_GD);
+
+=cut
+
+sub has_image_lib {
+    my $self = shift;
+    my $image_lib = shift;
+    
+    # work as instance method or static method
+    if(ref($self) ne 'Tempest') {
+        $image_lib = $self;
+        undef $self;
+    }
+    
+    if($image_lib eq LIB_MAGICK || $image_lib eq LIB_GD) {
+        eval("no warnings 'all'; require $image_lib;");
+        if(!$@) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+    else {
+        croak("Image library '$image_lib' is not supported");
+    }
+}
 
 # Determine optimal supported (and available) image library to use
 # not intended to be public, so no need to document it
 sub _calc_image_lib {
     for my $image_lib (LIB_MAGICK, LIB_GD) {
-        $@ = undef;
-        eval("no warnings 'all'; require $image_lib;");
-        if(!$@) {
+        if(Tempest::has_image_lib($image_lib)) {
             return $image_lib;
         }
     }

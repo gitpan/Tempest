@@ -1,5 +1,9 @@
 Revision history for Tempest
 
+2009.07.15
+        Added has_image_lib method, as specified in API version 2009.07.15.
+        Added tests for this and all other public static methods.
+
 2009.07.03
         Fixed dubious dependancy tests (for GD and Image::Magick) bundled with
         the distribution.  *Now* this should fix the failures in the CPAN
