@@ -39,6 +39,7 @@ foreach $propname (@props) {
 ## check that constants exist and that they have the expected values
 %consts = (
     'LIB_MAGICK' => 'Image::Magick',
+    'LIB_GMAGICK' => 'Graphics::Magick',
     'LIB_GD' => 'GD',
 );
 

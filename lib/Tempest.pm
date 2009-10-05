@@ -25,13 +25,13 @@ modern CPAN module:
 
 =head1 VERSION
 
-Version 2009.07.15_1 (alpha release)
+Version 2009.10.05_1 (alpha release)
 
 Tempest API Version 2009.07.15
 
 =cut
 
-our $VERSION = qv('2009.07.15_1'); # using CPAN alpha versioning to denote non-stable release
+our $VERSION = qv('2009.10.05_1'); # using CPAN alpha versioning to denote non-stable release
 our $API_VERSION = qv('2009.07.15');
 
 =head1 SYNOPSIS
@@ -62,6 +62,10 @@ of a given image library for all image manipulations.
 
 For forcing use of L<Image::Magick|Image::Magick> support.
 
+=head3 C<LIB_GMAGICK>
+
+For forcing use of L<Graphics::Magick|Graphics::Magick> support.
+
 =head3 C<LIB_GD>
 
 For forcing use of L<GD|GD> support.
@@ -69,6 +73,7 @@ For forcing use of L<GD|GD> support.
 =cut
 
 use constant LIB_MAGICK => 'Image::Magick';
+use constant LIB_GMAGICK => 'Graphics::Magick';
 use constant LIB_GD => 'GD';
 
 =head1 PROPERTIES
@@ -455,7 +460,7 @@ sub has_image_lib {
         undef $self;
     }
     
-    if($image_lib eq LIB_MAGICK || $image_lib eq LIB_GD) {
+    if($image_lib eq LIB_MAGICK || $image_lib eq LIB_GMAGICK || $image_lib eq LIB_GD) {
         eval("no warnings 'all'; require $image_lib;");
         if(!$@) {
             return 1;
@@ -472,7 +477,7 @@ sub has_image_lib {
 # Determine optimal supported (and available) image library to use
 # not intended to be public, so no need to document it
 sub _calc_image_lib {
-    for my $image_lib (LIB_MAGICK, LIB_GD) {
+    for my $image_lib (LIB_MAGICK, LIB_GMAGICK, LIB_GD) {
         if(Tempest::has_image_lib($image_lib)) {
             return $image_lib;
         }

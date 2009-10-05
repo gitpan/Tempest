@@ -1,5 +1,10 @@
 Revision history for Tempest
 
+2009.10.05
+        Added full support for Graphics::Magick.  Some minor but important
+        changes from the ImageMagick adapter (notably the lack of Fx or Clut
+        operators, meaning a manual color lookup implementation)
+
 2009.07.15
         Added has_image_lib method, as specified in API version 2009.07.15.
         Added tests for this and all other public static methods.

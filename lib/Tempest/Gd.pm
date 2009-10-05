@@ -1,6 +1,6 @@
 =head1 NAME
 
-Tempest::GD - GD adapter for Tempest heat-map generator
+Tempest::Gd - GD adapter for Tempest heat-map generator
 
 =head1 DESCRIPTION
 
