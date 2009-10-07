@@ -25,13 +25,13 @@ modern CPAN module:
 
 =head1 VERSION
 
-Version 2009.10.05_1 (alpha release)
+Version 2009.10.07_1 (alpha release)
 
 Tempest API Version 2009.07.15
 
 =cut
 
-our $VERSION = qv('2009.10.05_1'); # using CPAN alpha versioning to denote non-stable release
+our $VERSION = qv('2009.10.07_1'); # using CPAN alpha versioning to denote non-stable release
 our $API_VERSION = qv('2009.07.15');
 
 =head1 SYNOPSIS

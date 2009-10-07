@@ -48,7 +48,7 @@ SKIP: {
     SKIP: {
         $result = _compare(5, dirname(__FILE__) . '/data/output_imagemagick.png');
         skip 'Compare utility not available', 4 if ! defined $result;
-        is($result, "0\n", 'Output image should resemble the image we expect');
+        like($result, qr/^0\s+/, 'Output image should resemble the image we expect');
         
         my $a_test = new Tempest(
             'input_file' => dirname(__FILE__) . '/data/screenshot.png',
@@ -82,7 +82,7 @@ SKIP: {
             dirname(__FILE__) . '/data/opacity_imagemagick_b.png',
         );
         skip 'Compare utility not available', 1 if ! defined $result;
-        is($result, "0\n", 'Output images should be mostly identical');
+        like($result, qr/^0\s+/, 'Output images should be mostly identical');
     }
 }
 
@@ -100,6 +100,8 @@ sub _compare {
         return;
     }
     
+    diag("Compare Utility " . (split("\n", $output))[0] );
+    
     # ensure diff file exists first
     my $diff_file = dirname(__FILE__) . '/data/diff.png';
     if(!-f $diff_file) {
@@ -107,7 +109,13 @@ sub _compare {
         close($TOUCH);
     }
     
-    $output = 'compare -metric ae -fuzz ' . $fuzz . '% '
+    $output = `compare -help 2>&1`;
+    my $threshold = '';
+    if($output =~ m/-dissimilarity-threshold/) {
+        $threshold = '-dissimilarity-threshold 16384';
+    }
+    
+    $output = 'compare ' . $threshold . ' -metric ae -fuzz ' . $fuzz . '% '
         . abs_path($compare)
         . ' '
         . abs_path($baseline)

@@ -1,5 +1,9 @@
 Revision history for Tempest
 
+2009.10.07
+        Made image comparisons (in unit tests) more stable and forgiving of
+        version differences
+
 2009.10.05
         Added full support for Graphics::Magick.  Some minor but important
         changes from the ImageMagick adapter (notably the lack of Fx or Clut
