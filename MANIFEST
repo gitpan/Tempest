@@ -4,6 +4,7 @@ Makefile.PL
 README
 lib/Tempest.pm
 lib/Tempest/Gd.pm
+lib/Tempest/Graphicsmagick.pm
 lib/Tempest/Imagemagick.pm
 lib/Tempest/data/clut.png
 lib/Tempest/data/plot.png
@@ -12,6 +13,7 @@ t/01-api.t
 t/02-instantiation.t
 t/imagemagick.t
 t/gd.t
+t/graphicsmagick.t
 t/pod.t
 t/podcoverage.t
 t/data/compare.png

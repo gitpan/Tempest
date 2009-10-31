@@ -1,5 +1,9 @@
 Revision history for Tempest
 
+2009.10.31
+        Forgot to add the GraphicsMagick adapter to the manifest, so it was
+        never included in the last two packaged releases.  Oops.
+
 2009.10.07
         Made image comparisons (in unit tests) more stable and forgiving of
         version differences
