@@ -78,7 +78,9 @@ sub render {
     my @plot_correct = ( ($plot_file->width / 2), ($plot_file->height / 2) );
     
     # colorize opacity for how many times at most a point will be repeated
-    colorize($plot_file, (99 / $max_rep) );
+    my $colorize_percent = 99 / $max_rep;
+    if($colorize_percent < 1) { $colorize_percent = 1; }
+    colorize($plot_file, $colorize_percent);
     
     # paste one plot for each coordinate pair
     for my $pair (@{$coordinates}) {

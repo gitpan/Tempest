@@ -1,5 +1,10 @@
 Revision history for Tempest
 
+2010.09.26
+        First stable (non-beta) release!
+        Included arithmetic fix in colorize opacity, thanks to John Drago
+        for providing this fix.
+
 2009.10.31
         Forgot to add the GraphicsMagick adapter to the manifest, so it was
         never included in the last two packaged releases.  Oops.

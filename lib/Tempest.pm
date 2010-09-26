@@ -25,13 +25,13 @@ modern CPAN module:
 
 =head1 VERSION
 
-Version 2009.10.31_1 (beta release)
+Version 2010.09.26
 
 Tempest API Version 2009.07.15
 
 =cut
 
-our $VERSION = qv('2009.10.31_1'); # using CPAN alpha versioning to denote non-stable release
+our $VERSION = qv('2010.09.26');
 our $API_VERSION = qv('2009.07.15');
 
 =head1 SYNOPSIS
@@ -508,7 +508,7 @@ sub DESTROY {
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009 Evan Kaufman, all rights reserved.
+Copyright 2010 Evan Kaufman, all rights reserved.
 
 This program is released under the MIT license.
 
